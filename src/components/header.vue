@@ -1,8 +1,10 @@
 <template>
-  <Toolbar>
+  <Toolbar class="flex align-items-center">
     <template #start>
       <img alt="Logo" src="../assets/logo.png" width="40" height="40" />
-      <h1 class="text-primary text-2xl font-bold ml-5">SPRING - VUEJS CRUD</h1>
+      <div class="text-primary text-3xl font-bold ml-5">
+        SPRING - VUEJS CRUD
+      </div>
     </template>
 
     <template #end>
@@ -21,7 +23,7 @@
         />
       </router-link>
 
-      <i class="pi pi-ellipsis-v p-toolbar-separator mx-4" />
+      <i class="pi pi-ellipsis-v p-toolbar-separator mx-6" />
 
       <Button
         icon="pi pi-github"
