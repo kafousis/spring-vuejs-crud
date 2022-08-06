@@ -37,7 +37,7 @@ export default createStore({
         BookService.getBooks()
           .then(response => {
             console.log('success')
-            commit('getBooks', response.data)
+            commit('getBooks', response.data['_embedded']['books'])
             resolve();
           })
           .catch(error => {
