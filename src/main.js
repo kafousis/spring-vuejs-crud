@@ -5,6 +5,11 @@ import 'primevue/resources/primevue.min.css'            //core css
 import 'primeicons/primeicons.css'                      //icons
 import 'primeflex/primeflex.css';                       // primeflex
 
+import axios from 'axios';
+// becase of CORS error we need to have the same origin
+// requests are sent to backend server (see vue.config.js)
+axios.defaults.baseURL = 'http://localhost:3000';
+
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
@@ -13,6 +18,7 @@ import store from './store'
 import PrimeVue from 'primevue/config';
 import Toolbar from 'primevue/toolbar';
 import Button from 'primevue/button';
+import Card from 'primevue/card';
 
 const app = createApp(App);
 
@@ -25,6 +31,7 @@ app.use(PrimeVue, { ripple: true })
 
 app.component('Toolbar', Toolbar);
 app.component('Button', Button);
+app.component('Card', Card);
 
 
 app.mount('#app');
