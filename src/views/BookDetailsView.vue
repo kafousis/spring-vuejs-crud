@@ -1,5 +1,5 @@
   <template>
-  <div class="text-color-secondary text-3xl font-semibold m-5">Edit Book</div>
+  <div class="text-color-secondary text-3xl font-semibold m-5">{{ title }}</div>
   <Fieldset class="mx-6" legend="Godfather I">
     <div class="mb-4">
       <label for="id" class="block text-base font-medium mb-2">Id</label>
@@ -65,6 +65,21 @@
       <label for="year" class="block text-base font-medium mb-2">Year</label>
       <InputText id="year" type="text" class="w-full" />
     </div>
+
+    <!-- <Button label="Delete" icon="pi pi-trash" /> -->
+
+    <div class="grid my-6">
+      <div class="col">
+        <Button
+          label="Cancel"
+          icon="pi pi-times"
+          class="w-full p-button-outlined"
+        />
+      </div>
+      <div class="col">
+        <Button label="Save" icon="pi pi-check" class="w-full" />
+      </div>
+    </div>
   </Fieldset>
 </template>
 
@@ -75,6 +90,14 @@ export default {
     id: {
       type: Number,
       default: 0,
+    },
+  },
+  computed: {
+    isAddMode() {
+      return !this.id;
+    },
+    title() {
+      return `${this.isAddMode ? "Add" : "Edit"} Book`;
     },
   },
 };

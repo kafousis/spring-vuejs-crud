@@ -1,10 +1,18 @@
 <template>
   <div class="text-color-secondary text-3xl font-semibold m-5">
     Books
-    <Button
-      icon="pi pi-plus"
-      class="p-button-rounded p-button-secondary p-button-outlined ml-5"
-    />
+
+    <router-link
+      :to="{ name: 'book-detail', params: { id: 0 } }"
+      custom
+      v-slot="{ navigate }"
+    >
+      <Button
+        icon="pi pi-plus"
+        class="p-button-rounded p-button-secondary p-button-outlined ml-5"
+        @click="navigate"
+      />
+    </router-link>
   </div>
 
   <Message class="mx-5" :closable="false" :severity="messageSeverity">{{
