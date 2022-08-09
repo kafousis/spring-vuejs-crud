@@ -23,7 +23,7 @@
         />
       </router-link>
 
-      <i class="pi pi-ellipsis-v p-toolbar-separator mx-6" />
+      <i class="pi pi-ellipsis-v p-toolbar-separator mx-3" />
 
       <Button
         icon="pi pi-github"

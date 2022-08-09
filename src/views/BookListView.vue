@@ -27,10 +27,38 @@
           label="Delete"
           class="p-button-secondary ml-6"
           style="width: 150px"
+          @click="$store.commit('deleteBookDialogOpen', book)"
         />
       </template>
     </Card>
   </li>
+
+  <Dialog
+    header="Confirmation"
+    v-model:visible="displayDeleteBookDialog"
+    :style="{ width: '350px' }"
+    :modal="true"
+  >
+    <div class="confirmation-content">
+      <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
+      <span>Are you sure you want to proceed?</span>
+    </div>
+    <template #footer>
+      <Button
+        label="No"
+        icon="pi pi-times"
+        @click="$store.commit('deleteBookDialogClose')"
+        class="p-button-text"
+      />
+      <Button
+        label="Yes"
+        icon="pi pi-check"
+        @click="$store.dispatch('deleteBook')"
+        class="p-button-text"
+        autofocus
+      />
+    </template>
+  </Dialog>
 </template>
 
 <script>
@@ -38,6 +66,7 @@ export default {
   mounted() {
     this.$store.dispatch("getBooks");
   },
+  methods: {},
   computed: {
     messageSeverity: {
       get() {
@@ -47,6 +76,11 @@ export default {
     messageContent: {
       get() {
         return this.$store.state.messageContent;
+      },
+    },
+    displayDeleteBookDialog: {
+      get() {
+        return this.$store.state.displayDeleteBookDialog;
       },
     },
   },

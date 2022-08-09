@@ -7,8 +7,10 @@ export default createStore({
 
   state: {
     books: [],
+    selectedBook: null,
     messageSeverity: 'info',
     messageContent: 'Loading...',
+    displayDeleteBookDialog: false
   },
 
   // computed properties for stores
@@ -21,7 +23,7 @@ export default createStore({
   // commit a mutation
 
   mutations: {
-    getBooks(state, books) {
+    updateBooks(state, books) {
       state.books = books;
     },
     updateMessageSeverity(state, severity) {
@@ -29,6 +31,19 @@ export default createStore({
     },
     updateMessageContent(state, content) {
       state.messageContent = content;
+    },
+    deleteBookDialogOpen(state, book) {
+      state.selectedBook = book;
+      state.displayDeleteBookDialog = true;
+    },
+    deleteBookDialogClose(state) {
+      state.selectedBook = null;
+      state.displayDeleteBookDialog = false;
+    },
+    deleteBookFromArray(state) {
+      const index = state.books.findIndex(book => book.id === state.selectedBook.id);
+      //console.log('Book index for deletion is ' + index);
+      state.books.splice(index, 1);
     }
   },
 
@@ -38,19 +53,39 @@ export default createStore({
 
   actions: {
     getBooks({ commit }) {
-      console.log('action -> getBooks')
+      //console.log('action -> getBooks')
 
       BookService.getBooks()
         .then(response => {
-          console.log(response)
-          commit('getBooks', response.data['_embedded']['books'])
-          commit('updateMessageSeverity', 'success')
-          commit('updateMessageContent', response.data['_embedded']['books'].length + ' books fetched')
+          //console.log(response)
+          commit('updateBooks', response.data['_embedded']['books']);
+          commit('updateMessageSeverity', 'success');
+          commit('updateMessageContent', response.data['_embedded']['books'].length + ' books fetched');
         })
         .catch(error => {
-          console.log(error)
-          commit('updateMessageSeverity', 'error')
-          commit('updateMessageContent', error)
+          //console.log(error)
+          commit('updateMessageSeverity', 'error');
+          commit('updateMessageContent', error);
+        })
+    },
+    deleteBook({ state, commit }) {
+      //console.log('action -> deleteBook')
+
+      const bookId = state.selectedBook.id;
+
+      BookService.deleteBook(bookId)
+        .then(() => {
+          //console.log(response)
+          commit('deleteBookFromArray');
+          commit('deleteBookDialogClose');
+
+          commit('updateMessageSeverity', 'success');
+          commit('updateMessageContent', 'Book with Id ' + bookId + ' has been deleted');
+        })
+        .catch(error => {
+          //console.log(error);
+          commit('updateMessageSeverity', 'error');
+          commit('updateMessageContent', error);
         })
     }
   },

@@ -20,6 +20,7 @@ import Toolbar from 'primevue/toolbar';
 import Button from 'primevue/button';
 import Card from 'primevue/card';
 import Message from 'primevue/message';
+import Dialog from 'primevue/dialog';
 
 const app = createApp(App);
 
@@ -34,5 +35,6 @@ app.component('Toolbar', Toolbar);
 app.component('Button', Button);
 app.component('Card', Card);
 app.component('Message', Message);
+app.component('Dialog', Dialog);
 
 app.mount('#app');
