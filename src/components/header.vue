@@ -1,7 +1,7 @@
 <template>
   <Toolbar class="flex align-items-center">
     <template #start>
-      <img alt="Logo" src="../assets/logo.png" width="40" height="40" />
+      <img alt="Logo" src="../assets/logo.png" height="40" />
       <div class="text-primary text-2xl font-bold ml-5">
         SPRING - VUEJS CRUD
       </div>
