@@ -7,7 +7,7 @@
       class="vertical-align-middle"
     />
 
-    <span class="text-lg ml-2 vertical-align-middle"
+    <span class="text-base ml-2 vertical-align-middle"
       >App created by Giannis Kafousis</span
     >
   </div>
