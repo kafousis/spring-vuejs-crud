@@ -6,7 +6,9 @@ export default createStore({
   // data
 
   state: {
-    books: []
+    books: [],
+    messageSeverity: 'info',
+    messageContent: 'Loading...',
   },
 
   // computed properties for stores
@@ -21,6 +23,12 @@ export default createStore({
   mutations: {
     getBooks(state, books) {
       state.books = books;
+    },
+    updateMessageSeverity(state, severity) {
+      state.messageSeverity = severity;
+    },
+    updateMessageContent(state, content) {
+      state.messageContent = content;
     }
   },
 
@@ -32,19 +40,18 @@ export default createStore({
     getBooks({ commit }) {
       console.log('action -> getBooks')
 
-      return new Promise((resolve, reject) => {
-
-        BookService.getBooks()
-          .then(response => {
-            console.log('success')
-            commit('getBooks', response.data['_embedded']['books'])
-            resolve();
-          })
-          .catch(error => {
-            console.log('error')
-            reject(error);
-          })
-      })
+      BookService.getBooks()
+        .then(response => {
+          console.log(response)
+          commit('getBooks', response.data['_embedded']['books'])
+          commit('updateMessageSeverity', 'success')
+          commit('updateMessageContent', response.data['_embedded']['books'].length + ' books fetched')
+        })
+        .catch(error => {
+          console.log(error)
+          commit('updateMessageSeverity', 'error')
+          commit('updateMessageContent', error)
+        })
     }
   },
   modules: {

@@ -7,7 +7,11 @@
     />
   </div>
 
-  <li class="list-none ml-5" v-for="book in $store.state.books" :key="book.id">
+  <Message class="mx-5" :closable="false" :severity="messageSeverity">{{
+    messageContent
+  }}</Message>
+
+  <li class="list-none mx-5" v-for="book in $store.state.books" :key="book.id">
     <Card class="mb-3 p-3 shadow-4">
       <template #title>{{ book.title }}</template>
       <template #subtitle>{{ book.allAuthors }}</template>
@@ -27,40 +31,24 @@
       </template>
     </Card>
   </li>
-
-  <!-- <Card>
-    <template #title>My wonderful book</template>
-    <template #subtitle>Giannis Kafousis, Vaso Kountouri</template>
-    <template #footer>
-      <Button
-        icon="pi pi-pencil"
-        label="Edit"
-        class="p-button-primary"
-        style="width: 180px"
-      />
-      <Button
-        icon="pi pi-trash"
-        label="Delete"
-        class="p-button-secondary ml-6"
-        style="width: 180px"
-      />
-    </template>
-  </Card> -->
 </template>
 
 <script>
 export default {
   mounted() {
-    this.$store.dispatch("getBooks").then(
-      (response) => {
-        console.log("Got some data");
-        console.log(response);
+    this.$store.dispatch("getBooks");
+  },
+  computed: {
+    messageSeverity: {
+      get() {
+        return this.$store.state.messageSeverity;
       },
-      (error) => {
-        console.error("Handle the error");
-        console.log(error);
-      }
-    );
+    },
+    messageContent: {
+      get() {
+        return this.$store.state.messageContent;
+      },
+    },
   },
 };
 </script>
