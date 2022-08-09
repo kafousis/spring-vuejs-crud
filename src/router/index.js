@@ -17,7 +17,7 @@ const routes = [
   },
   {
     path: '/books/:id',
-    name: 'book detail',
+    name: 'book-detail',
     // props: true
     props: parseProps,
     component: BookDetailsView

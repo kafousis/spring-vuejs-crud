@@ -16,12 +16,20 @@
       <template #title>{{ book.title }}</template>
       <template #subtitle>{{ book.allAuthors }}</template>
       <template #footer>
-        <Button
-          icon="pi pi-pencil"
-          label="Edit"
-          class="p-button-primary"
-          style="width: 150px"
-        />
+        <router-link
+          :to="{ name: 'book-detail', params: { id: book.id } }"
+          custom
+          v-slot="{ navigate }"
+        >
+          <Button
+            icon="pi pi-pencil"
+            label="Edit"
+            class="p-button-primary"
+            style="width: 150px"
+            @click="navigate"
+          />
+        </router-link>
+
         <Button
           icon="pi pi-trash"
           label="Delete"
