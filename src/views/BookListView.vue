@@ -1,7 +1,7 @@
 <template>
   <div class="text-color-secondary text-3xl font-semibold m-5">
     Books
-
+    <Toast />
     <router-link
       :to="{ name: 'book-detail', params: { id: 0 } }"
       custom
