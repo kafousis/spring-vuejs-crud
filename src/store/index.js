@@ -88,6 +88,9 @@ export default createStore({
   actions: {
     getBooks({ commit }) {
 
+      commit('updateMessageSeverity', 'info');
+      commit('updateMessageContent', 'Loading...');
+
       BookService.getBooks()
         .then(response => {
           //console.log(response)
@@ -102,6 +105,9 @@ export default createStore({
         })
     },
     deleteBook({ state, commit }) {
+
+      commit('updateMessageSeverity', 'info');
+      commit('updateMessageContent', 'Loading...');
 
       const bookId = state.selectedBook.id;
 
@@ -122,9 +128,12 @@ export default createStore({
     },
     getAuthors({ commit }) {
 
+      commit('updateMessageSeverity', 'info');
+      commit('updateMessageContent', 'Loading...');
+
       AuthorService.getAuthors()
         .then(response => {
-          console.log(response)
+          //console.log(response)
           commit('updateAuthors', response.data['_embedded']['authors']);
         })
         .catch(error => {
@@ -137,7 +146,7 @@ export default createStore({
 
       GenreService.getGenres()
         .then(response => {
-          console.log(response)
+          //console.log(response)
           commit('updateGenres', response.data['_embedded']['genres']);
         })
         .catch(error => {
@@ -150,7 +159,7 @@ export default createStore({
 
       PublisherService.getPublishers()
         .then(response => {
-          console.log(response)
+          //console.log(response)
           commit('updatePublishers', response.data['_embedded']['publishers']);
 
           commit('updateMessageSeverity', 'success');
