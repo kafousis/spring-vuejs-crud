@@ -3,15 +3,30 @@
   <Message class="mx-5" :closable="false" :severity="messageSeverity">{{
     messageContent
   }}</Message>
-  <Fieldset class="mx-6" legend="Godfather I">
+  <Fieldset class="mx-6" :legend="bookTitle">
     <div class="mb-4">
       <label for="id" class="block text-base font-medium mb-2">Id</label>
-      <InputText id="id" type="text" class="w-full" v-model="bookId" disabled />
+      <InputText
+        id="id"
+        type="text"
+        class="w-full"
+        v-model.number="bookId"
+        disabled
+      />
     </div>
 
     <div class="mb-4">
       <label for="title" class="block text-base font-medium mb-2">Title</label>
-      <InputText id="title" type="text" class="w-full" v-model="bookTitle" />
+      <InputText
+        id="title"
+        type="text"
+        v-model="bookTitle"
+        class="w-full"
+        v-bind:class="{ 'p-invalid': v$.bookTitle.$error }"
+      />
+      <small id="title-error" class="p-error" v-if="v$.bookTitle.$error">{{
+        v$.bookTitle.$errors[0].$message
+      }}</small>
     </div>
 
     <div class="mb-4">
@@ -26,7 +41,14 @@
         optionValue="id"
         v-model="bookFirstAuthor"
         class="w-full"
+        v-bind:class="{ 'p-invalid': v$.bookFirstAuthor.$error }"
       />
+      <small
+        id="firstAuthor-error"
+        class="p-error"
+        v-if="v$.bookFirstAuthor.$error"
+        >{{ v$.bookFirstAuthor.$errors[0].$message }}</small
+      >
     </div>
 
     <div class="mb-4">
@@ -41,7 +63,14 @@
         optionValue="id"
         v-model="bookSecondAuthor"
         class="w-full"
+        v-bind:class="{ 'p-invalid': v$.bookSecondAuthor.$error }"
       />
+      <small
+        id="secondAuthor-error"
+        class="p-error"
+        v-if="v$.bookSecondAuthor.$error"
+        >{{ v$.bookSecondAuthor.$errors[0].$message }}</small
+      >
     </div>
 
     <div class="mb-4">
@@ -54,12 +83,25 @@
         optionValue="id"
         v-model="bookGenre"
         class="w-full"
+        v-bind:class="{ 'p-invalid': v$.bookGenre.$error }"
       />
+      <small id="genre-error" class="p-error" v-if="v$.bookGenre.$error">{{
+        v$.bookGenre.$errors[0].$message
+      }}</small>
     </div>
 
     <div class="mb-4">
       <label for="isbn" class="block text-base font-medium mb-2">ISBN</label>
-      <InputText id="isbn" type="text" class="w-full" v-model="bookIsbn" />
+      <InputText
+        id="isbn"
+        type="text"
+        v-model="bookIsbn"
+        class="w-full"
+        v-bind:class="{ 'p-invalid': v$.bookIsbn.$error }"
+      />
+      <small id="isbn-error" class="p-error" v-if="v$.bookIsbn.$error">{{
+        v$.bookIsbn.$errors[0].$message
+      }}</small>
     </div>
 
     <div class="mb-4">
@@ -74,7 +116,14 @@
         optionValue="id"
         v-model="bookPublisher"
         class="w-full"
+        v-bind:class="{ 'p-invalid': v$.bookPublisher.$error }"
       />
+      <small
+        id="publisher-error"
+        class="p-error"
+        v-if="v$.bookPublisher.$error"
+        >{{ v$.bookPublisher.$errors[0].$message }}</small
+      >
     </div>
 
     <div class="grid mb-4">
@@ -85,18 +134,32 @@
         <InputText
           id="pages"
           type="text"
+          v-model.number="bookTotalPages"
           class="w-full"
-          v-model="bookTotalPages"
+          v-bind:class="{ 'p-invalid': v$.bookTotalPages.$error }"
         />
+        <small
+          id="pages-error"
+          class="p-error"
+          v-if="v$.bookTotalPages.$error"
+          >{{ v$.bookTotalPages.$errors[0].$message }}</small
+        >
       </div>
       <div class="col">
         <label for="year" class="block text-base font-medium mb-2">Year</label>
         <InputText
           id="year"
           type="text"
+          v-model.number="bookPublishedYear"
           class="w-full"
-          v-model="bookPublishedYear"
+          v-bind:class="{ 'p-invalid': v$.bookPublishedYear.$error }"
         />
+        <small
+          id="year-error"
+          class="p-error"
+          v-if="v$.bookPublishedYear.$error"
+          >{{ v$.bookPublishedYear.$errors[0].$message }}</small
+        >
       </div>
     </div>
 
@@ -125,6 +188,22 @@
 </template>
 
 <script>
+import useVuelidate from "@vuelidate/core";
+import {
+  required,
+  numeric,
+  minLength,
+  maxLength,
+  integer,
+} from "@vuelidate/validators";
+
+export function sameAuthorsValidator() {
+  if (this.bookSecondAuthor === this.bookFirstAuthor) {
+    return false;
+  }
+  return true;
+}
+
 export default {
   name: "BookDetailsView",
   props: {
@@ -132,6 +211,34 @@ export default {
       type: Number,
       default: 0,
     },
+  },
+  data() {
+    return {
+      v$: useVuelidate(),
+    };
+  },
+  validations() {
+    return {
+      bookTitle: { required },
+      bookFirstAuthor: { required },
+      //bookSecondAuthor: { not: not(sameAs(this.bookFirstAuthor)) },
+      bookSecondAuthor: {
+        sameAuthorsValidator: {
+          $validator: sameAuthorsValidator,
+          $message: "Duplicated author",
+        },
+      },
+      bookGenre: { required },
+      bookIsbn: {
+        required,
+        numeric,
+        minLength: minLength(13),
+        maxLength: maxLength(13),
+      },
+      bookPublisher: { required },
+      bookTotalPages: { required, integer },
+      bookPublishedYear: { required, integer },
+    };
   },
   mounted() {
     this.$store.dispatch("getAuthors");
@@ -143,7 +250,12 @@ export default {
   },
   methods: {
     validate() {
-      console.log(this.$state.selectedBook);
+      this.v$.$validate();
+
+      if (!this.v$.$error) {
+        console.log("form validation successful");
+        //console.log(this.$state.selectedBook);
+      }
     },
   },
   computed: {

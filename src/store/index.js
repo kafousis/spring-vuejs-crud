@@ -102,13 +102,16 @@ export default createStore({
       state.selectedBook.genreDetails.id = genreId
       delete state.selectedBook.genreDetails.name;
     },
-    updateTotalPages(state, totalPages) {
-      state.selectedBook.totalPages = totalPages;
+    updateIsbn(state, isbn) {
+      state.selectedBook.isbn = isbn;
     },
     updatePublisher(state, publisherId) {
       state.selectedBook.publisherDetails.id = publisherId
       delete state.selectedBook.publisherDetails.name;
       delete state.selectedBook.publisherDetails.country;
+    },
+    updateTotalPages(state, totalPages) {
+      state.selectedBook.totalPages = totalPages;
     },
     updatePublishedYear(state, publishedYear) {
       state.selectedBook.publishedYear = publishedYear;
