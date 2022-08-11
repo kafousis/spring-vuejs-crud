@@ -16,16 +16,12 @@ export default createStore({
     displayDeleteBookDialog: false,
 
     authors: [],
-    firstAuthor: null,
-    secondAuthor: null,
-
     genres: [],
-    genre: null,
-
     publishers: [],
-    publisher: null,
 
-    isSaveBtnDisabled: false
+    isSaveBtnDisabled: false,
+
+    testAuthor: "Trenton Hauck"
   },
 
   // methods that can change state data, only sychronous code
@@ -55,26 +51,67 @@ export default createStore({
       //console.log('Book index for deletion is ' + index);
       state.books.splice(index, 1);
     },
+    selectBookById(state, id) {
+      if (id == 0) {
+        state.selectedBook = { "publisherDetails": {}, "genreDetails": {}, "authorsDetails": [{}, {}] }
+        state.isSaveBtnDisabled = false
+      } else {
+
+        // in case of refresh state.books.length == 0
+        if (state.books.length > 0) {
+          state.selectedBook = state.books.find(book => book.id === id);
+          state.isSaveBtnDisabled = false
+        } else {
+          state.selectedBook = { "publisherDetails": {}, "genreDetails": {}, "authorsDetails": [{}, {}] };
+          state.isSaveBtnDisabled = true;
+        }
+        //console.log(state.selectedBook)
+      }
+    },
     updateAuthors(state, authors) {
       state.authors = authors;
-    },
-    selectFirstAuthor(state, author) {
-      state.firstAuthor = author;
-    },
-    selectSecondAuthor(state, author) {
-      state.secondAuthor = author;
     },
     updateGenres(state, genres) {
       state.genres = genres;
     },
-    selectGenre(state, genre) {
-      state.genre = genre;
-    },
     updatePublishers(state, publishers) {
       state.publishers = publishers;
     },
-    selectPublisher(state, publisher) {
-      state.publisher = publisher;
+    updateTitle(state, title) {
+      state.selectedBook.title = title;
+    },
+    updateFirstAuthor(state, authorId) {
+      state.selectedBook.authorsDetails[0].id = authorId;
+      delete state.selectedBook.authorsDetails[0].fullName
+      delete state.selectedBook.authorsDetails[0].country
+      //console.log(state.selectedBook)
+    },
+    updateSecondAuthor(state, authorId) {
+      if (state.selectedBook.authorsDetails.length == 2) {
+        state.selectedBook.authorsDetails[1].id = authorId;
+        delete state.selectedBook.authorsDetails[1].fullName
+        delete state.selectedBook.authorsDetails[1].country
+        //console.log(state.selectedBook)
+      } else {
+        const author = { "id": authorId }
+        state.selectedBook.authorsDetails.push(author);
+        //console.log(state.selectedBook)
+      }
+    },
+    updateGenre(state, genreId) {
+      state.selectedBook.genreDetails.id = genreId
+      delete state.selectedBook.genreDetails.name;
+    },
+    updateTotalPages(state, totalPages) {
+      state.selectedBook.totalPages = totalPages;
+    },
+    updatePublisher(state, publisherId) {
+      state.selectedBook.publisherDetails.id = publisherId
+      delete state.selectedBook.publisherDetails.name;
+      delete state.selectedBook.publisherDetails.country;
+    },
+    updatePublishedYear(state, publishedYear) {
+      state.selectedBook.publishedYear = publishedYear;
     },
     setSaveBtnDisabled(state, disabled) {
       state.isSaveBtnDisabled = disabled;
@@ -155,15 +192,22 @@ export default createStore({
           commit('setSaveBtnDisabled', true);
         })
     },
-    getPublishers({ commit }) {
+    getPublishers({ state, commit }) {
 
       PublisherService.getPublishers()
         .then(response => {
           //console.log(response)
           commit('updatePublishers', response.data['_embedded']['publishers']);
 
-          commit('updateMessageSeverity', 'success');
-          commit('updateMessageContent', 'Ready to save');
+          if (state.books.length > 0) {
+            commit('updateMessageSeverity', 'success');
+            commit('updateMessageContent', 'Ready to save');
+          } else {
+            // case of refresh
+            commit('updateMessageSeverity', 'error');
+            commit('updateMessageContent', 'State is lost. Please go back and try again.');
+          }
+
         })
         .catch(error => {
           commit('updateMessageSeverity', 'error');
