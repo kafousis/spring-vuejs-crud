@@ -91,11 +91,12 @@ export default createStore({
         state.selectedBook.authorsDetails[1].id = authorId;
         delete state.selectedBook.authorsDetails[1].fullName
         delete state.selectedBook.authorsDetails[1].country
-        //console.log(state.selectedBook)
+        console.log(state.selectedBook)
       } else {
         const author = { "id": authorId }
+        // add author at the end
         state.selectedBook.authorsDetails.push(author);
-        //console.log(state.selectedBook)
+        console.log(state.selectedBook)
       }
     },
     updateGenre(state, genreId) {

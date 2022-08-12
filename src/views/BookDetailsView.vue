@@ -3,7 +3,7 @@
   <Message class="mx-5" :closable="false" :severity="messageSeverity">{{
     messageContent
   }}</Message>
-  <Fieldset class="mx-6" :legend="bookTitle">
+  <Fieldset class="mx-6" :legend="fieldSetTitle">
     <div class="mb-4">
       <label for="id" class="block text-base font-medium mb-2">Id</label>
       <InputText
@@ -58,7 +58,7 @@
       <Dropdown
         id="secondAuthor"
         placeholder="Select an Author"
-        :options="authors"
+        :options="authorsWithNoneOption"
         optionLabel="fullName"
         optionValue="id"
         v-model="bookSecondAuthor"
@@ -221,11 +221,10 @@ export default {
     return {
       bookTitle: { required },
       bookFirstAuthor: { required },
-      //bookSecondAuthor: { not: not(sameAs(this.bookFirstAuthor)) },
       bookSecondAuthor: {
         sameAuthorsValidator: {
           $validator: sameAuthorsValidator,
-          $message: "Duplicated author",
+          $message: "Duplicated Author",
         },
       },
       bookGenre: { required },
@@ -265,6 +264,9 @@ export default {
     title() {
       return `${this.isAddMode ? "Add" : "Edit"} Book`;
     },
+    fieldSetTitle() {
+      return `${this.isAddMode ? "New book" : "Book: " + this.bookTitle}`;
+    },
     messageSeverity: {
       get() {
         return this.$store.state.messageSeverity;
@@ -278,6 +280,16 @@ export default {
     authors: {
       get() {
         return this.$store.state.authors;
+      },
+    },
+    authorsWithNoneOption: {
+      get() {
+        // clone array
+        var authors = this.$store.state.authors.slice(0);
+        var noneOptiion = { id: -1, fullName: "None" };
+        // add option at tha beggining
+        authors.unshift(noneOptiion);
+        return authors;
       },
     },
     genres: {
@@ -316,7 +328,7 @@ export default {
         if (this.$store.state.selectedBook.authorsDetails.length == 2) {
           return this.$store.state.selectedBook.authorsDetails[1].id;
         } else {
-          return null;
+          return -1;
         }
       },
       set(authorId) {
