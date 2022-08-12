@@ -14,14 +14,15 @@ The Vue.js application makes REST calls to the [Books REST API](https://github.c
 - PrimeFlex
 - Vue Router
 - Vuex state management
-- Axios HTTP Client 
+- Axios HTTP Client
 - Vuelidate 2
 
-> The project was built with Node v16.14.2 and Vue CLI v5.0.8.
+> The project was built with Node v16 and Vue CLI v5.0.8.
 
 ## Run project
 ```
+npm install
 npm run serve
 ```
 
-> The application is running at port 3000 by default.
+> The application runs at port 3000 by default. In order for the application to be able to reach the Books REST API, **if you used any port other than 8080**, you need to change the [vue.config.js file](https://github.com/kafousis/spring-vuejs-crud/blob/main/vue.config.js) according to the appropriate IP and port.
