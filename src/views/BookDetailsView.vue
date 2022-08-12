@@ -188,7 +188,9 @@
 </template>
 
 <script>
+import axios from "axios";
 import useVuelidate from "@vuelidate/core";
+
 import {
   required,
   numeric,
@@ -252,9 +254,45 @@ export default {
       this.v$.$validate();
 
       if (!this.v$.$error) {
-        console.log("form validation successful");
-        //console.log(this.$state.selectedBook);
+        //console.log("form validation successful");
+        this.updateBookReferenceUris();
+
+        if (this.isAddMode) {
+          this.$store.dispatch("createBook");
+        } else {
+          this.$store.dispatch("updateBook");
+        }
       }
+    },
+    updateBookReferenceUris() {
+      //console.log(this.$store.state.selectedBook);
+
+      var authorsUris = [];
+
+      var firstAuthorUri =
+        axios.defaults.baseURL + "/api/authors/" + this.bookFirstAuthor;
+      authorsUris.push(firstAuthorUri);
+
+      if (
+        this.$store.state.selectedBook.authorsDetails.length == 2 &&
+        this.$store.state.selectedBook.authorsDetails[1].id >= 0
+      ) {
+        var secondAuthorUri =
+          axios.defaults.baseURL + "/api/authors/" + this.bookSecondAuthor;
+        authorsUris.push(secondAuthorUri);
+      }
+
+      var genreUri = axios.defaults.baseURL + "/api/genres/" + this.bookGenre;
+      var publisherUri =
+        axios.defaults.baseURL + "/api/publishers/" + this.bookPublisher;
+
+      this.$store.commit("updateReferenceUris", {
+        authorsUris,
+        genreUri,
+        publisherUri,
+      });
+
+      //console.log(this.$store.state.selectedBook);
     },
   },
   computed: {

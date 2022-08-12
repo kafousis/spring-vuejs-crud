@@ -1,4 +1,5 @@
 import { createStore } from 'vuex'
+import router from "../router";
 import BookService from '../services/book-service';
 import AuthorService from '../services/author-service';
 import GenreService from '../services/genre-service';
@@ -20,8 +21,6 @@ export default createStore({
     publishers: [],
 
     isSaveBtnDisabled: false,
-
-    testAuthor: "Trenton Hauck"
   },
 
   // methods that can change state data, only sychronous code
@@ -53,7 +52,7 @@ export default createStore({
     },
     selectBookById(state, id) {
       if (id == 0) {
-        state.selectedBook = { "publisherDetails": {}, "genreDetails": {}, "authorsDetails": [{}, {}] }
+        state.selectedBook = { "publisherDetails": {}, "genreDetails": {}, "authorsDetails": [{}] }
         state.isSaveBtnDisabled = false
       } else {
 
@@ -62,7 +61,7 @@ export default createStore({
           state.selectedBook = state.books.find(book => book.id === id);
           state.isSaveBtnDisabled = false
         } else {
-          state.selectedBook = { "publisherDetails": {}, "genreDetails": {}, "authorsDetails": [{}, {}] };
+          state.selectedBook = { "publisherDetails": {}, "genreDetails": {}, "authorsDetails": [{}] };
           state.isSaveBtnDisabled = true;
         }
         //console.log(state.selectedBook)
@@ -91,12 +90,12 @@ export default createStore({
         state.selectedBook.authorsDetails[1].id = authorId;
         delete state.selectedBook.authorsDetails[1].fullName
         delete state.selectedBook.authorsDetails[1].country
-        console.log(state.selectedBook)
+        //console.log(state.selectedBook)
       } else {
         const author = { "id": authorId }
         // add author at the end
         state.selectedBook.authorsDetails.push(author);
-        console.log(state.selectedBook)
+        //console.log(state.selectedBook)
       }
     },
     updateGenre(state, genreId) {
@@ -116,6 +115,11 @@ export default createStore({
     },
     updatePublishedYear(state, publishedYear) {
       state.selectedBook.publishedYear = publishedYear;
+    },
+    updateReferenceUris(state, { authorsUris, genreUri, publisherUri }) {
+      state.selectedBook.authors = authorsUris
+      state.selectedBook.genre = genreUri
+      state.selectedBook.publisher = publisherUri
     },
     setSaveBtnDisabled(state, disabled) {
       state.isSaveBtnDisabled = disabled;
@@ -217,6 +221,45 @@ export default createStore({
           commit('updateMessageSeverity', 'error');
           commit('updateMessageContent', error);
           commit('setSaveBtnDisabled', true);
+        })
+    },
+    updateBook({ state, commit }) {
+
+      commit('updateMessageSeverity', 'info');
+      commit('updateMessageContent', 'Loading...');
+
+      const book = state.selectedBook
+
+      BookService.updateBook(book, book.id)
+        .then(() => {
+          //console.log(response)
+          commit('updateMessageSeverity', 'success');
+          commit('updateMessageContent', 'Book with Id ' + book.id + ' has been updated');
+        })
+        .catch(error => {
+          //console.log(error);
+          commit('updateMessageSeverity', 'error');
+          commit('updateMessageContent', error);
+        })
+    },
+    createBook({ state, commit }) {
+
+      commit('updateMessageSeverity', 'info');
+      commit('updateMessageContent', 'Loading...');
+
+      const book = state.selectedBook
+
+      BookService.createBook(book)
+        .then(() => {
+          //console.log(response)
+          commit('updateMessageSeverity', 'success');
+          commit('updateMessageContent', 'Book has been created');
+          router.push('/books')
+        })
+        .catch(error => {
+          //console.log(error);
+          commit('updateMessageSeverity', 'error');
+          commit('updateMessageContent', error);
         })
     },
   },
