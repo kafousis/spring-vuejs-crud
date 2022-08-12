@@ -1,5 +1,5 @@
 # Spring - Vue.js CRUD example
-An Vue.js application which performs CRUD operations.
+A Vue.js application which performs CRUD operations.
 
 ## The Books REST API
 The Vue.js application makes REST calls to the [Books REST API](https://github.com/kafousis/books-rest-api) and performs the following CRUD operations:
@@ -23,3 +23,5 @@ The Vue.js application makes REST calls to the [Books REST API](https://github.c
 ```
 npm run serve
 ```
+
+> The application is running at port 3000 by default.
