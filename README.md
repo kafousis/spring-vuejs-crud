@@ -1,24 +1,25 @@
-# spring-vuejs-crud
+# Spring - Vue.js CRUD example
+An Vue.js application which performs CRUD operations.
 
-## Project setup
-```
-npm install
-```
+## The Books REST API
+The Vue.js application makes REST calls to the [Books REST API](https://github.com/kafousis/books-rest-api) and performs the following CRUD operations:
+- Get saved books
+- Create new book
+- Update existing book
+- Delete existing book
 
-### Compiles and hot-reloads for development
+## Software Stack
+- Vue.js 3
+- PrimeVue
+- PrimeFlex
+- Vue Router
+- Vuex state management
+- Axios HTTP Client 
+- Vuelidate 2
+
+> The project was built with Node v16.14.2 and Vue CLI v5.0.8.
+
+## Run project
 ```
 npm run serve
 ```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
